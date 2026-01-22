@@ -1,0 +1,156 @@
+{
+  "project": {
+    "name": "Audio and Video Noise Reduction",
+    "version": "1.0.0",
+    "description": "Deep learning model for audio and video noise reduction using U-Net architecture",
+    "author": "AI Research Team",
+    "date_created": "2026-01-22"
+  },
+  "audio_config": {
+    "sample_rate": 16000,
+    "n_fft": 512,
+    "hop_length": 128,
+    "duration": 2.0,
+    "spectrogram_bins": 257,
+    "time_frames": 131,
+    "n_mels": null
+  },
+  "model": {
+    "architecture": "U-Net",
+    "input_shape": [257, 131, 1],
+    "base_filters": 32,
+    "encoder_depth": 3,
+    "decoder_depth": 3,
+    "batch_norm": true,
+    "skip_connections": true,
+    "activation": "relu",
+    "output_activation": "relu"
+  },
+  "training": {
+    "optimizer": "adam",
+    "learning_rate": 0.001,
+    "loss_function": "mse",
+    "batch_size": 16,
+    "epochs": 50,
+    "validation_split": 0.2,
+    "shuffle": true,
+    "callbacks": {
+      "early_stopping": {
+        "enabled": true,
+        "monitor": "val_loss",
+        "patience": 10,
+        "restore_best_weights": true
+      },
+      "model_checkpoint": {
+        "enabled": true,
+        "monitor": "val_loss",
+        "save_best_only": true
+      },
+      "reduce_lr": {
+        "enabled": true,
+        "monitor": "val_loss",
+        "factor": 0.5,
+        "patience": 5,
+        "min_lr": 0.000001
+      }
+    }
+  },
+  "dataset": {
+    "name": "Valentini Speech Enhancement Dataset",
+    "source": "kaggle",
+    "kaggle_dataset": "valentini-and-gomtsyan-speech-enhancement-dataset",
+    "noise_types": ["white", "pink", "brown"],
+    "snr_levels": [5, 10, 15, 20, 25],
+    "train_samples": 300,
+    "val_samples": 50,
+    "test_samples": 50
+  },
+  "evaluation_metrics": {
+    "spectrogram_metrics": {
+      "mse": {
+        "description": "Mean Squared Error",
+        "lower_is_better": true,
+        "range": [0, "inf"]
+      },
+      "mae": {
+        "description": "Mean Absolute Error",
+        "lower_is_better": true,
+        "range": [0, "inf"]
+      },
+      "ssim": {
+        "description": "Structural Similarity Index",
+        "lower_is_better": false,
+        "range": [-1, 1]
+      },
+      "psnr": {
+        "description": "Peak Signal-to-Noise Ratio",
+        "lower_is_better": false,
+        "range": [0, "inf"],
+        "unit": "dB"
+      }
+    },
+    "audio_metrics": {
+      "pesq": {
+        "description": "Perceptual Evaluation of Speech Quality",
+        "lower_is_better": false,
+        "range": [-0.5, 4.5],
+        "interpretation": {
+          "3.0_plus": "Very Good",
+          "2.5_to_3.0": "Good",
+          "2.0_to_2.5": "Fair",
+          "1.5_to_2.0": "Poor"
+        }
+      },
+      "stoi": {
+        "description": "Short-Time Objective Intelligibility",
+        "lower_is_better": false,
+        "range": [0, 1],
+        "interpretation": {
+          "0.85_plus": "Intelligible",
+          "0.70_to_0.85": "Good",
+          "0.65_to_0.70": "Marginal",
+          "below_0.65": "Unintelligible"
+        }
+      }
+    }
+  },
+  "preprocessing": {
+    "normalization": "minmax",
+    "normalize_range": [0, 1],
+    "data_augmentation": false,
+    "augmentation_factor": null
+  },
+  "inference": {
+    "batch_processing": true,
+    "gpu_enabled": true,
+    "mixed_precision": false,
+    "max_batch_size": 32
+  },
+  "video": {
+    "enabled": false,
+    "frame_height": 480,
+    "frame_width": 640,
+    "frame_rate": 30,
+    "architecture": "3D_CNN",
+    "temporal_depth": 3
+  },
+  "output_files": {
+    "trained_model": "audio_denoiser_final.h5",
+    "best_checkpoint": "best_denoiser_model.h5",
+    "metrics_json": "evaluation_results.json",
+    "summary_report": "RESULTS_SUMMARY.txt",
+    "visualizations": {
+      "data_exploration": "01_data_exploration.png",
+      "training_history": "02_training_history.png",
+      "denoising_results": "03_denoising_results.png",
+      "performance_metrics": "04_performance_metrics.png",
+      "metrics_distribution": "05_metrics_distribution.png"
+    }
+  },
+  "paths": {
+    "data_dir": "/tmp/dataset",
+    "output_dir": "./outputs",
+    "model_dir": "./models",
+    "logs_dir": "./logs"
+  }
+}
