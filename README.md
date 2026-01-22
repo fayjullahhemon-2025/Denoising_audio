@@ -15,7 +15,7 @@ A comprehensive implementation of noise reduction models for audio and video con
 - [Performance Metrics](#performance-metrics)
 - [File Structure](#file-structure)
 - [Contributing](#contributing)
-- [License](#license)
+
 
 ## 🎯 Overview
 
@@ -461,13 +461,10 @@ Contributions are welcome! Please feel free to:
 - [ ] Improved metrics visualization
 - [ ] Model quantization for deployment
 
-## 📝 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## 👨‍💻 Author
 
-Audio and Video Noise Reduction Project
+Audio and Video Noise Reduction Project by Fayjullah
 
 ## 🙏 Acknowledgments
 
